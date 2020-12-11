@@ -1,0 +1,42 @@
+{
+  "name": "vue-password-checker",
+  "version": "1.0.0",
+  "author": "Red Squirrel Studio",
+  "description": "A password strength checker for Vue js",
+  "keywords": [
+    "Vue",
+    "Password",
+    "strength",
+    "form",
+    "validation"
+  ],
+  "main": "dist/vue-password-checker.umd.js",
+  "module": "dist/vue-password-checker.esm.js",
+  "unpkg": "dist/vue-password-checker.min.js",
+  "browser": {
+    "./sfc": "src/vue-password-checker.vue"
+  },
+  "scripts": {
+    "build": "npm run build:umd & npm run build:es & npm run build:unpkg",
+    "build:umd": "rollup --config build/rollup.config.js --format umd --file dist/vue-password-checker.umd.js",
+    "build:es": "rollup --config build/rollup.config.js --format es --file dist/vue-password-checker.esm.js",
+    "build:unpkg": "rollup --config build/rollup.config.js --format iife --file dist/vue-password-checker.min.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/redsquirrelstudio/vue-password-checker.git"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/redsquirrelstudio/vue-password-checker/issues"
+  },
+  "homepage": "https://github.com/redsquirrelstudio/vue-password-checker#readme",
+  "devDependencies": {
+    "rollup": "^1.17.0",
+    "@rollup/plugin-buble": "^0.21.3",
+    "@rollup/plugin-commonjs": "^11.1.0",
+    "rollup-plugin-vue": "^5.0.1",
+    "vue": "^2.6.10",
+    "vue-template-compiler": "^2.6.10"
+  }
+}
