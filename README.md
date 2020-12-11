@@ -19,9 +19,7 @@ yarn add vue-password-checker
 And then can be imported into your project.
 
 ```js
-import 'PasswordChecker'
-
-from "vue-password-checker";
+import 'PasswordChecker' from "vue-password-checker";
 ```
 
 ## Configuration
