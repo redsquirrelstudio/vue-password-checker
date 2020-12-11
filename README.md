@@ -21,8 +21,7 @@ And then can be imported into your project.
 ```js
 import 'PasswordChecker'
 
-from
-"vue-password-checker";
+from "vue-password-checker";
 ```
 
 ## Configuration
