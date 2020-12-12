@@ -7,7 +7,7 @@
     <p class="strength-message">
       Password Strength:
       <span v-if="strength === -1" :style="{ color: color }">Invalid</span>
-      <span v-else-if="strength === 0">Very Weak</span>
+      <span v-else-if="strength === 0" :style="{ color: color }">Very Weak</span>
       <span v-else-if="strength === 25" :style="{ color: color }">Weak</span>
       <span v-else-if="strength === 50" :style="{ color: color }">Medium</span>
       <span v-else-if="strength === 75" :style="{ color: color }">Strong</span>
