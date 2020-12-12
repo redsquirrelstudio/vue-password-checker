@@ -71,7 +71,7 @@ export default {
       strength += this.testUpper() ? 25 : 0;
       strength += this.testNumber() ? 25 : 0;
       strength += this.testSpecial() ? 25 : 0;
-      if (this.testSpaces) {
+      if (this.testSpaces()) {
         strength = -1;
       }
       return strength;
