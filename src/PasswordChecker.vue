@@ -64,16 +64,14 @@ export default {
   computed: {
     strength() {
       let strength = 0;
-      if (this.password === '') {
-        return 0;
+      if (this.password === '' || this.testSpaces()) {
+        return -1;
       }
       strength += this.testLength() ? 25 : 0;
       strength += this.testUpper() ? 25 : 0;
       strength += this.testNumber() ? 25 : 0;
       strength += this.testSpecial() ? 25 : 0;
-      if (this.testSpaces()) {
-        strength = -1;
-      }
+      strength += this.testSpaces() ? 25 : 0;
       return strength;
     }
     ,
