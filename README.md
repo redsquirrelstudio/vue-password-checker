@@ -48,7 +48,7 @@ Used to define the colors the strength bar and text will use.
 default:
  ```js
  {
-    invalid: '#d6847e',
+    invalid: '#000',
     very_weak: '#FFF',
     weak: '#d44137',
     good: '#e36e0e',
@@ -70,6 +70,40 @@ Type: Number
 The minimum length the password checker should look for.
 
 default: 6
+
+## Configuration
+
+In order to get the strength value for the password the component is tracking, you can use the getStrength() function, a value from 0 to 100 is returned.
+
+```js
+<template>
+  <div>
+    <password-checker ref="checker" :password="password" show-instructions>
+      <label for="password">Password</label>
+      <input id="password" type="password" v-model="password">
+    </password-checker>
+  </div>
+</template>
+
+<script>
+import PasswordChecker from "vue-password-checker";
+export default {
+  name: "App",
+  data(){
+    return{
+      password: '',
+    }
+  },
+  components: {
+    PasswordChecker,
+  },
+  mounted:{
+    //Writes the password strength value to console
+    console.log(this.$refs.checker.getStrength()); 
+  }
+}
+</script>
+```
 
 ## Example
 

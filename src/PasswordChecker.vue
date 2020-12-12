@@ -38,7 +38,7 @@ export default {
       type: Object,
       default() {
         return {
-          invalid: '#d6847e',
+          invalid: '#000',
           very_weak: '#FFF',
           weak: '#d44137',
           good: '#e36e0e',
@@ -71,7 +71,6 @@ export default {
       strength += this.testUpper() ? 25 : 0;
       strength += this.testNumber() ? 25 : 0;
       strength += this.testSpecial() ? 25 : 0;
-      strength += this.testSpaces() ? 25 : 0;
       return strength;
     }
     ,
@@ -113,6 +112,9 @@ export default {
     testSpaces() {
       const spaces = /\s/;
       return spaces.test(this.password);
+    },
+    getStrength() {
+      return this.strength;
     }
   }
 }
@@ -129,19 +131,19 @@ export default {
   display: block;
 }
 
-.strength-checker-wrapper ul{
+.strength-checker-wrapper ul {
   list-style: disc;
   padding-inline-start: 0;
 }
 
-.strength-checker-wrapper .strength-bar{
+.strength-checker-wrapper .strength-bar {
   width: 100%;
   position: relative;
   border-radius: 10px;
   height: 3px;
 }
 
-.strength-checker-wrapper .strength-bar .bar{
+.strength-checker-wrapper .strength-bar .bar {
   position: absolute;
   left: 0;
   top: 0;
