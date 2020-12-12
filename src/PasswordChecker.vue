@@ -6,7 +6,8 @@
     </div>
     <p class="strength-message">
       Password Strength:
-      <span v-if="strength === 0">Very Weak</span>
+      <span v-if="strength === -1" :style="{ color: color }">Invalid</span>
+      <span v-else-if="strength === 0">Very Weak</span>
       <span v-else-if="strength === 25" :style="{ color: color }">Weak</span>
       <span v-else-if="strength === 50" :style="{ color: color }">Medium</span>
       <span v-else-if="strength === 75" :style="{ color: color }">Strong</span>
@@ -15,6 +16,7 @@
     <div v-if="showInstructions">
       <p>For a strong password:</p>
       <ul>
+        <li :style="`color: ${!testSpaces() ? 'green' : 'red'};`">Do not include spaces</li>
         <li :style="`color: ${testLength() ? 'green' : 'red'};`">Use at least {{ length }} characters</li>
         <li :style="`color: ${testUpper() ? 'green' : 'red'};`">Use at least one uppercase letter</li>
         <li :style="`color: ${testNumber() ? 'green' : 'red'};`">Use at least one number</li>
@@ -36,6 +38,7 @@ export default {
       type: Object,
       default() {
         return {
+          invalid: '#d6847e',
           very_weak: '#FFF',
           weak: '#d44137',
           good: '#e36e0e',
@@ -68,12 +71,16 @@ export default {
       strength += this.testUpper() ? 25 : 0;
       strength += this.testNumber() ? 25 : 0;
       strength += this.testSpecial() ? 25 : 0;
-
+      if (this.testSpaces) {
+        strength = -1;
+      }
       return strength;
     }
     ,
     color() {
       switch (this.strength) {
+        case -1:
+          return this.colors.invalid;
         case 0:
           return this.colors.very_weak;
         case 25:
@@ -94,16 +101,20 @@ export default {
       return this.password.length > this.length;
     },
     testUpper() {
-      let uppercase = /[A-Z]/;
+      const uppercase = /[A-Z]/;
       return uppercase.test(this.password)
     },
     testNumber() {
-      let number = /[0-9]/;
+      const number = /[0-9]/;
       return number.test(this.password)
     },
     testSpecial() {
-      let special = /[`!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?~]/;
+      const special = /[`!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?~]/;
       return special.test(this.password);
+    },
+    testSpaces() {
+      const spaces = /\s/;
+      return spaces.test(this.password);
     }
   }
 }

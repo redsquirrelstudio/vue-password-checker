@@ -48,6 +48,7 @@ Used to define the colors the strength bar and text will use.
 default:
  ```js
  {
+    invalid: '#d6847e',
     very_weak: '#FFF',
     weak: '#d44137',
     good: '#e36e0e',
