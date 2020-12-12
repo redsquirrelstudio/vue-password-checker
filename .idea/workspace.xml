@@ -5,7 +5,6 @@
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/PasswordChecker.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/PasswordChecker.vue" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -60,7 +59,7 @@
       <updated>1607705578586</updated>
       <workItem from="1607705579739" duration="5956000" />
       <workItem from="1607757306934" duration="469000" />
-      <workItem from="1607800342408" duration="302000" />
+      <workItem from="1607800342408" duration="409000" />
     </task>
     <servers />
   </component>

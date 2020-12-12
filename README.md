@@ -71,7 +71,7 @@ The minimum length the password checker should look for.
 
 default: 6
 
-## Configuration
+## Functions
 
 In order to get the strength value for the password the component is tracking, you can use the getStrength() function, a value from 0 to 100 is returned.
 
