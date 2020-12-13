@@ -30,6 +30,8 @@
   //
   //
   //
+  //
+  //
 
   var script = {
     name: "PasswordChecker",
@@ -42,6 +44,7 @@
         type: Object,
         default: function default$1() {
           return {
+            invalid: '#000',
             very_weak: '#FFF',
             weak: '#d44137',
             good: '#e36e0e',
@@ -67,19 +70,20 @@
     computed: {
       strength: function strength() {
         var strength = 0;
-        if (this.password === '') {
-          return 0;
+        if (this.password === '' || this.testSpaces()) {
+          return -1;
         }
         strength += this.testLength() ? 25 : 0;
         strength += this.testUpper() ? 25 : 0;
         strength += this.testNumber() ? 25 : 0;
         strength += this.testSpecial() ? 25 : 0;
-
         return strength;
       }
       ,
       color: function color() {
         switch (this.strength) {
+          case -1:
+            return this.colors.invalid;
           case 0:
             return this.colors.very_weak;
           case 25:
@@ -110,6 +114,13 @@
       testSpecial: function testSpecial() {
         var special = /[`!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?~]/;
         return special.test(this.password);
+      },
+      testSpaces: function testSpaces() {
+        var spaces = /\s/;
+        return spaces.test(this.password);
+      },
+      getStrength: function getStrength() {
+        return this.strength;
       }
     }
   };
@@ -269,8 +280,10 @@
         _vm._v(" "),
         _c("p", { staticClass: "strength-message" }, [
           _vm._v("\n    Password Strength:\n    "),
-          _vm.strength === 0
-            ? _c("span", [_vm._v("Very Weak")])
+          _vm.strength === -1
+            ? _c("span", { style: { color: _vm.color } }, [_vm._v("Invalid")])
+            : _vm.strength === 0
+            ? _c("span", { style: { color: _vm.color } }, [_vm._v("Very Weak")])
             : _vm.strength === 25
             ? _c("span", { style: { color: _vm.color } }, [_vm._v("Weak")])
             : _vm.strength === 50
@@ -287,6 +300,14 @@
               _c("p", [_vm._v("For a strong password:")]),
               _vm._v(" "),
               _c("ul", [
+                _c(
+                  "li",
+                  {
+                    style: "color: " + (!_vm.testSpaces() ? "green" : "red") + ";"
+                  },
+                  [_vm._v("Do not include spaces")]
+                ),
+                _vm._v(" "),
                 _c(
                   "li",
                   {
@@ -331,11 +352,11 @@
     /* style */
     var __vue_inject_styles__ = function (inject) {
       if (!inject) { return }
-      inject("data-v-75c73723_0", { source: "\n.strength-checker-wrapper[data-v-75c73723] {\n  width: 100%;\n  color: #7a7a7a;\n}\n.strength-checker-wrapper .strength-input[data-v-75c73723] {\n  width: 100%;\n  display: block;\n}\n.strength-checker-wrapper ul[data-v-75c73723]{\n  list-style: disc;\n  padding-inline-start: 0;\n}\n.strength-checker-wrapper .strength-bar[data-v-75c73723]{\n  width: 100%;\n  position: relative;\n  border-radius: 10px;\n  height: 3px;\n}\n.strength-checker-wrapper .strength-bar .bar[data-v-75c73723]{\n  position: absolute;\n  left: 0;\n  top: 0;\n  border-radius: 10px;\n  height: 100%;\n  transition: width 0.3s;\n}\n\n", map: {"version":3,"sources":["/srv/http/vue-password-checker/src/PasswordChecker.vue"],"names":[],"mappings":";AAgHA;EACA,WAAA;EACA,cAAA;AACA;AAEA;EACA,WAAA;EACA,cAAA;AACA;AAEA;EACA,gBAAA;EACA,uBAAA;AACA;AAEA;EACA,WAAA;EACA,kBAAA;EACA,mBAAA;EACA,WAAA;AACA;AAEA;EACA,kBAAA;EACA,OAAA;EACA,MAAA;EACA,mBAAA;EACA,YAAA;EACA,sBAAA;AACA","file":"PasswordChecker.vue","sourcesContent":["<template>\n  <div class=\"strength-checker-wrapper\" :style=\"`font-family: ${font}`\">\n    <slot class=\"strength-input\"></slot>\n    <div class=\"strength-bar\">\n      <div class=\"bar\" :style=\"`width: ${strength}%; background-color: ${color};`\"></div>\n    </div>\n    <p class=\"strength-message\">\n      Password Strength:\n      <span v-if=\"strength === 0\">Very Weak</span>\n      <span v-else-if=\"strength === 25\" :style=\"{ color: color }\">Weak</span>\n      <span v-else-if=\"strength === 50\" :style=\"{ color: color }\">Medium</span>\n      <span v-else-if=\"strength === 75\" :style=\"{ color: color }\">Strong</span>\n      <span v-else-if=\"strength === 100\" :style=\"{ color: color }\">Very Strong</span>\n    </p>\n    <div v-if=\"showInstructions\">\n      <p>For a strong password:</p>\n      <ul>\n        <li :style=\"`color: ${testLength() ? 'green' : 'red'};`\">Use at least {{ length }} characters</li>\n        <li :style=\"`color: ${testUpper() ? 'green' : 'red'};`\">Use at least one uppercase letter</li>\n        <li :style=\"`color: ${testNumber() ? 'green' : 'red'};`\">Use at least one number</li>\n        <li :style=\"`color: ${testSpecial() ? 'green' : 'red'};`\">Use at least one special character</li>\n      </ul>\n    </div>\n  </div>\n</template>\n\n<script>\nexport default {\n  name: \"PasswordChecker\",\n  props: {\n    font: {\n      type: String,\n      default: 'sans-serif',\n    },\n    colors: {\n      type: Object,\n      default() {\n        return {\n          very_weak: '#FFF',\n          weak: '#d44137',\n          good: '#e36e0e',\n          strong: '#c4c934',\n          very_strong: '#24ed09',\n        }\n      }\n    },\n    showInstructions: {\n      type: Boolean,\n      default: false,\n    },\n    length: {\n      type: Number,\n      default: 6\n    },\n    password: {\n      type: String,\n      required: true,\n    }\n  }\n  ,\n  computed: {\n    strength() {\n      let strength = 0;\n      if (this.password === '') {\n        return 0;\n      }\n      strength += this.testLength() ? 25 : 0;\n      strength += this.testUpper() ? 25 : 0;\n      strength += this.testNumber() ? 25 : 0;\n      strength += this.testSpecial() ? 25 : 0;\n\n      return strength;\n    }\n    ,\n    color() {\n      switch (this.strength) {\n        case 0:\n          return this.colors.very_weak;\n        case 25:\n          return this.colors.weak;\n        case 50:\n          return this.colors.good;\n        case 75:\n          return this.colors.strong;\n        case 100:\n          return this.colors.very_strong;\n        default:\n          return '#FFF';\n      }\n    }\n  },\n  methods: {\n    testLength() {\n      return this.password.length > this.length;\n    },\n    testUpper() {\n      let uppercase = /[A-Z]/;\n      return uppercase.test(this.password)\n    },\n    testNumber() {\n      let number = /[0-9]/;\n      return number.test(this.password)\n    },\n    testSpecial() {\n      let special = /[`!@#$%^&*()_+\\-=[\\]{};':\"\\\\|,.<>/?~]/;\n      return special.test(this.password);\n    }\n  }\n}\n</script>\n\n<style scoped>\n.strength-checker-wrapper {\n  width: 100%;\n  color: #7a7a7a;\n}\n\n.strength-checker-wrapper .strength-input {\n  width: 100%;\n  display: block;\n}\n\n.strength-checker-wrapper ul{\n  list-style: disc;\n  padding-inline-start: 0;\n}\n\n.strength-checker-wrapper .strength-bar{\n  width: 100%;\n  position: relative;\n  border-radius: 10px;\n  height: 3px;\n}\n\n.strength-checker-wrapper .strength-bar .bar{\n  position: absolute;\n  left: 0;\n  top: 0;\n  border-radius: 10px;\n  height: 100%;\n  transition: width 0.3s;\n}\n\n</style>"]}, media: undefined });
+      inject("data-v-c963edbe_0", { source: "\n.strength-checker-wrapper[data-v-c963edbe] {\n  width: 100%;\n  color: #7a7a7a;\n}\n.strength-checker-wrapper .strength-input[data-v-c963edbe] {\n  width: 100%;\n  display: block;\n}\n.strength-checker-wrapper ul[data-v-c963edbe] {\n  list-style: disc;\n  padding-inline-start: 0;\n}\n.strength-checker-wrapper .strength-bar[data-v-c963edbe] {\n  width: 100%;\n  position: relative;\n  border-radius: 10px;\n  height: 3px;\n}\n.strength-checker-wrapper .strength-bar .bar[data-v-c963edbe] {\n  position: absolute;\n  left: 0;\n  top: 0;\n  border-radius: 10px;\n  height: 100%;\n  transition: width 0.3s;\n}\n\n", map: {"version":3,"sources":["/srv/http/vue-password-checker/src/PasswordChecker.vue"],"names":[],"mappings":";AA2HA;EACA,WAAA;EACA,cAAA;AACA;AAEA;EACA,WAAA;EACA,cAAA;AACA;AAEA;EACA,gBAAA;EACA,uBAAA;AACA;AAEA;EACA,WAAA;EACA,kBAAA;EACA,mBAAA;EACA,WAAA;AACA;AAEA;EACA,kBAAA;EACA,OAAA;EACA,MAAA;EACA,mBAAA;EACA,YAAA;EACA,sBAAA;AACA","file":"PasswordChecker.vue","sourcesContent":["<template>\n  <div class=\"strength-checker-wrapper\" :style=\"`font-family: ${font}`\">\n    <slot class=\"strength-input\"></slot>\n    <div class=\"strength-bar\">\n      <div class=\"bar\" :style=\"`width: ${strength}%; background-color: ${color};`\"></div>\n    </div>\n    <p class=\"strength-message\">\n      Password Strength:\n      <span v-if=\"strength === -1\" :style=\"{ color: color }\">Invalid</span>\n      <span v-else-if=\"strength === 0\" :style=\"{ color: color }\">Very Weak</span>\n      <span v-else-if=\"strength === 25\" :style=\"{ color: color }\">Weak</span>\n      <span v-else-if=\"strength === 50\" :style=\"{ color: color }\">Medium</span>\n      <span v-else-if=\"strength === 75\" :style=\"{ color: color }\">Strong</span>\n      <span v-else-if=\"strength === 100\" :style=\"{ color: color }\">Very Strong</span>\n    </p>\n    <div v-if=\"showInstructions\">\n      <p>For a strong password:</p>\n      <ul>\n        <li :style=\"`color: ${!testSpaces() ? 'green' : 'red'};`\">Do not include spaces</li>\n        <li :style=\"`color: ${testLength() ? 'green' : 'red'};`\">Use at least {{ length }} characters</li>\n        <li :style=\"`color: ${testUpper() ? 'green' : 'red'};`\">Use at least one uppercase letter</li>\n        <li :style=\"`color: ${testNumber() ? 'green' : 'red'};`\">Use at least one number</li>\n        <li :style=\"`color: ${testSpecial() ? 'green' : 'red'};`\">Use at least one special character</li>\n      </ul>\n    </div>\n  </div>\n</template>\n\n<script>\nexport default {\n  name: \"PasswordChecker\",\n  props: {\n    font: {\n      type: String,\n      default: 'sans-serif',\n    },\n    colors: {\n      type: Object,\n      default() {\n        return {\n          invalid: '#000',\n          very_weak: '#FFF',\n          weak: '#d44137',\n          good: '#e36e0e',\n          strong: '#c4c934',\n          very_strong: '#24ed09',\n        }\n      }\n    },\n    showInstructions: {\n      type: Boolean,\n      default: false,\n    },\n    length: {\n      type: Number,\n      default: 6\n    },\n    password: {\n      type: String,\n      required: true,\n    }\n  }\n  ,\n  computed: {\n    strength() {\n      let strength = 0;\n      if (this.password === '' || this.testSpaces()) {\n        return -1;\n      }\n      strength += this.testLength() ? 25 : 0;\n      strength += this.testUpper() ? 25 : 0;\n      strength += this.testNumber() ? 25 : 0;\n      strength += this.testSpecial() ? 25 : 0;\n      return strength;\n    }\n    ,\n    color() {\n      switch (this.strength) {\n        case -1:\n          return this.colors.invalid;\n        case 0:\n          return this.colors.very_weak;\n        case 25:\n          return this.colors.weak;\n        case 50:\n          return this.colors.good;\n        case 75:\n          return this.colors.strong;\n        case 100:\n          return this.colors.very_strong;\n        default:\n          return '#FFF';\n      }\n    }\n  },\n  methods: {\n    testLength() {\n      return this.password.length > this.length;\n    },\n    testUpper() {\n      const uppercase = /[A-Z]/;\n      return uppercase.test(this.password)\n    },\n    testNumber() {\n      const number = /[0-9]/;\n      return number.test(this.password)\n    },\n    testSpecial() {\n      const special = /[`!@#$%^&*()_+\\-=[\\]{};':\"\\\\|,.<>/?~]/;\n      return special.test(this.password);\n    },\n    testSpaces() {\n      const spaces = /\\s/;\n      return spaces.test(this.password);\n    },\n    getStrength() {\n      return this.strength;\n    }\n  }\n}\n</script>\n\n<style scoped>\n.strength-checker-wrapper {\n  width: 100%;\n  color: #7a7a7a;\n}\n\n.strength-checker-wrapper .strength-input {\n  width: 100%;\n  display: block;\n}\n\n.strength-checker-wrapper ul {\n  list-style: disc;\n  padding-inline-start: 0;\n}\n\n.strength-checker-wrapper .strength-bar {\n  width: 100%;\n  position: relative;\n  border-radius: 10px;\n  height: 3px;\n}\n\n.strength-checker-wrapper .strength-bar .bar {\n  position: absolute;\n  left: 0;\n  top: 0;\n  border-radius: 10px;\n  height: 100%;\n  transition: width 0.3s;\n}\n\n</style>\n"]}, media: undefined });
 
     };
     /* scoped */
-    var __vue_scope_id__ = "data-v-75c73723";
+    var __vue_scope_id__ = "data-v-c963edbe";
     /* module identifier */
     var __vue_module_identifier__ = undefined;
     /* functional template */
